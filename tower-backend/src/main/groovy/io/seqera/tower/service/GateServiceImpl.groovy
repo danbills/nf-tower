@@ -92,7 +92,8 @@ class GateServiceImpl implements GateService {
         assert user.email, "Missing email address for user=$user"
 
         final mail = buildSignInEmail(user)
-        mailService.sendMail(mail)
+	// println(mail)
+        // mailService.sendMail(mail)
     }
 
     protected void sendNewUserEmail(User user) {
@@ -146,6 +147,7 @@ class GateServiceImpl implements GateService {
     protected Mail buildSignInEmail(User user) {
         // create template binding
         def binding = new HashMap(5)
+	println(buildAccessUrl(user))
         binding.app_name = appName
         binding.auth_url = buildAccessUrl(user)
         binding.server_url = serverUrl
