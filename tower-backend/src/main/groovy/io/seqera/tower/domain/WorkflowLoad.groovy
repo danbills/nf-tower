@@ -23,7 +23,7 @@ import groovy.transform.ToString
 import io.seqera.tower.service.progress.ProgressRecord
 import io.seqera.tower.service.progress.ProgressRow
 import io.seqera.util.H8ListToStringType
-import io.seqera.annotation.VerFST
+// import io.seqera.annotation.VerFST  // Commented out as it's causing issues
 /**
  * Model workflow execution progress aggregate metrics
  *
@@ -48,7 +48,8 @@ class WorkflowLoad implements ProgressRecord, Serializable {
     long writeBytes
     long volCtxSwitch
     long invCtxSwitch
-    @VerFST(1) BigDecimal cost
+    // @VerFST(1)  // Commented out as it's causing issues
+    BigDecimal cost
 
     long loadTasks
     long loadCpus
