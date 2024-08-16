@@ -11,13 +11,52 @@ services:
     volumes:
       - $PWD:/work
     working_dir: /work
+      # set environment variable for TOWER_SMTP_USER
+    environment:
+      - TOWER_SMTP_USER=smtpuser
+      - TOWER_SMTP_PASSWORD=smtppassword
+      - TOWER_SMTP_SERVER=smtpserver
+      # - TOWER_SMTP_PORT=587
+      # - TOWER_SMTP_TLS=true
+      # - TOWER_SMTP_FROM=smtpfrom
+      # - TOWER_SMTP_FROM_NAME=smtpfromname
+      # - TOWER_SMTP_REPLY_TO=smtpreplyto
+      # - TOWER_SMTP_REPLY_TO_NAME=smtpreplytoname
+      # - TOWER_SMTP_SUBJECT_PREFIX=smtpsubjectprefix
+      # - TOWER_SMTP_DEBUG=true
+      # - TOWER_SMTP_TEST=false
+      # - TOWER_SMTP_TEST_EMAIL=smtpemail
+      # - TOWER_SMTP_TEST_SUBJECT=smtpsubject
+      # - TOWER_SMTP_TEST_BODY=smtpbody
+      # - TOWER_SMTP_TEST_HTML_BODY=smtphtmlbody
+      # - TOWER_SMTP_TEST_ATTACHMENT=smtpattachment
+      # - TOWER_SMTP_TEST_ATTACHMENT_FILENAME=smtpattachmentfilename
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_TYPE=smtpattachmentcontenttype
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_ID=smtpattachmentcontentid
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_DISPOSITION=smtpattachmentcontentdisposition
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_TRANSFER_ENCODING=smtpattachmentcontenttransferencoding
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CHARSET=smtpattachmentcontentcharset
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_FILENAME=smtpattachmentcontentfilename
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_TYPE=smtpattachmentcontentcontenttype
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_ID=smtpattachmentcontentcontentid
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_DISPOSITION=smtpattachmentcontentcontentdisposition
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_TRANSFER_ENCODING=smtpattachmentcontentcontenttransferencoding
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_CHARSET=smtpattachmentcontentcontentcharset
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_FILENAME=smtpattachmentcontentcontentfilename
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_CONTENT_TYPE=smtpattachmentcontentcontentcontenttype
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_CONTENT_ID=smtpattachmentcontentcontentcontentid
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_CONTENT_DISPOSITION=smtpattachmentcontentcontentcontentdisposition
+      # - TOWER_SMTP_TEST_ATTACHMENT_CONTENT_CONTENT_CONTENT_TRANSFER_ENCODING
+
+      
 
   frontend:
     build: ./tower-web
     networks:
       - frontend
     ports:
-      - 8000:80
+      # - 8000:80
+      - "0.0.0.0:8000:80"
     depends_on:
       - backend
 
