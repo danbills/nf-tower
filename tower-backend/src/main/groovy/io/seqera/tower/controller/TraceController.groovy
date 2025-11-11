@@ -54,7 +54,6 @@ import io.seqera.tower.service.live.LiveEventsService
  */
 @Slf4j
 @CompileStatic
-@Secured(['ROLE_USER'])
 @Controller("/trace")
 class TraceController extends BaseController {
 

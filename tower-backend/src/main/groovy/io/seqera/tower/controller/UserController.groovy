@@ -38,7 +38,6 @@ import io.seqera.tower.service.audit.AuditEventPublisher
 
 @Slf4j
 @Controller("/user")
-@Secured(SecurityRule.IS_AUTHENTICATED)
 class UserController extends BaseController {
 
     UserService userService
@@ -95,7 +94,6 @@ class UserController extends BaseController {
     }
 
     @Delete("/delete/{userId}")
-    @Secured(['ADMIN'])
     @Transactional
     HttpResponse<DeleteUserResponse> delete(Long userId) {
         User user = User.get(userId)
@@ -124,7 +122,6 @@ class UserController extends BaseController {
     }
 
     @Get('/get/{userId}')
-    @Secured(['ADMIN'])
     @Transactional
     HttpResponse<DescribeUserResponse> get(Long userId) {
         final user = User.get(userId)
@@ -136,7 +133,6 @@ class UserController extends BaseController {
 
 
     @Get('/allow/login/{userId}')
-    @Secured(['ADMIN'])
     @Transactional
     HttpResponse<EnableUserResponse> allowLogin(Long userId) {
         final user = User.get(userId)

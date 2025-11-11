@@ -42,7 +42,6 @@ import io.seqera.tower.service.audit.AuditEventPublisher
 @Controller("/token")
 @Transactional
 @CompileStatic
-@Secured(['ROLE_USER'])
 class TokenController  extends BaseController {
 
     @Inject UserService userService

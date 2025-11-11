@@ -57,10 +57,10 @@ const routes: Routes = [
   {
     path: '', component: HomeComponent,
     children: [
-      { path: 'watch/:id', component: WorkflowDetailComponent, canActivate: [AuthGuard] },
-      { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-      { path: 'tokens', component: AccessTokenComponent, canActivate: [AuthGuard] },
-      { path: 'welcome', component: WelcomeComponent, canActivate: [AuthGuard] },
+      { path: 'watch/:id', component: WorkflowDetailComponent },
+      { path: 'profile', component: UserProfileComponent },
+      { path: 'tokens', component: AccessTokenComponent },
+      { path: 'welcome', component: WelcomeComponent },
       { path: 'login', component: LoginComponent },
     ]
   },

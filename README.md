@@ -8,13 +8,19 @@ for [Nextflow](https://www.nextflow.io/) workflows developed by [Seqera Labs](ht
 ## Availability
 A free-to-use public Tower service is available at [tower.nf](https://tower.nf/).
 
-The community version of Tower is available from this repository. It can be deployed in a 
-user's own environment and has features for single users to monitor their Nextflow 
+**SIMPLIFIED SINGLE-USER VERSION**
+
+This community version has been simplified for single-user operation with all authentication
+removed. No login, registration, or email configuration required. Simply start the application
+and begin monitoring your workflows immediately as a single default user.
+
+The community version of Tower is available from this repository. It can be deployed in a
+user's own environment and has features for single users to monitor their Nextflow
 pipelines, deployed anywhere.
 
 The fully-featured enterprise version of Tower is available from Seqera Labs. It can be
 deployed in any on-premise or cloud environment and includes advanced workflow
-management, resource optimization, and enterprise-grade support. To learn more, please 
+management, resource optimization, and enterprise-grade support. To learn more, please
 visit [Seqera Labs](https://seqera.io).
 
 ## Requirements 
@@ -44,26 +50,19 @@ Tower backend settings can be provided in either:
 - `application.yml` in the backend class-path
 - `tower.yml` in the launching directory
 
-A minimal config requires the settings for the SMTP
-server, using the following variables:
-
-- `TOWER_SMTP_HOST`: The SMTP server host name e.g. `email-smtp.eu-west-1.amazonaws.com`.
-- `TOWER_SMTP_PORT`: The SMTP server port number e.g. `587`.
-- `TOWER_SMTP_USER`: The SMTP user name.
-- `TOWER_SMTP_PASSWORD`: The SMTP user password.
+**SINGLE-USER MODE:** No SMTP or authentication configuration required. The application
+automatically creates a default user (`user@tower.local`) on startup.
 
 ## Basic use case
 
-Navigate to GUI in `http://localhost:8000` and follow the instructions.
+Navigate to `http://localhost:8000` in your browser. You will be automatically logged in
+as the default user and can immediately start monitoring your Nextflow workflows.
 
 # Development
 
 ### Backend execution
 
-Define the following env variables:
-
-- `TOWER_SMTP_USER=<smtp user name>`
-- `TOWER_SMTP_PASSWORD=<smpt password>`
+**SINGLE-USER MODE:** No environment variables are required for authentication.
 
 See `tower-backend/src/main/resources/application.yml` for further config details.
 
@@ -91,20 +90,17 @@ By default it uses [H2](https://www.h2database.com), an embedded database meant 
 
 ## Environment variables:
 
-* `TOWER_APP_NAME`: Application name.
-* `TOWER_SERVER_URL`: Server URL e.g. `https://tower.nf`.
-* `TOWER_CONTACT_EMAIL`: Sysadmin email contact e.g. `hello@tower.nf`.
-* `TOWER_DB_CREATE`: DB creation policy e.g. `none`.
-* `TOWER_DB_URL`: Database JDBC connection URL e.g. `jdbc:mysql://localhost:3307/tower`.
-* `TOWER_DB_DRIVER`: Database JDBC driver class name e.g. `com.mysql.cj.jdbc.Driver`.
-* `TOWER_DB_DIALECT`: Database SQL Hibernate dialect `org.hibernate.dialect.MySQL55Dialect`.
-* `TOWER_DB_USER`: Database user name.
-* `TOWER_DB_PASSWORD`: Database user password.
-* `TOWER_SMTP_HOST`: SMTP server host name.
-* `TOWER_SMTP_PORT`: SMTP server port e.g. `587`.
-* `TOWER_SMTP_AUTH`: SMTP server authentication eg `true`
-* `TOWER_SMTP_USER`: SMTP server user name.
-* `TOWER_SMTP_PASSWORD`: SMTP server user password.
+* `TOWER_APP_NAME`: Application name (default: "Nextflow Tower").
+* `TOWER_SERVER_URL`: Server URL e.g. `http://localhost:8000`.
+* `TOWER_CONTACT_EMAIL`: Contact email e.g. `hello@foo.com`.
+* `TOWER_DB_CREATE`: DB creation policy (default: `update`).
+* `TOWER_DB_URL`: Database JDBC connection URL (default: `jdbc:h2:file:./.db/h2/tower`).
+* `TOWER_DB_DRIVER`: Database JDBC driver class name (default: `org.h2.Driver`).
+* `TOWER_DB_DIALECT`: Database SQL Hibernate dialect (default: `org.hibernate.dialect.H2Dialect`).
+* `TOWER_DB_USER`: Database user name (default: `sa`).
+* `TOWER_DB_PASSWORD`: Database user password (default: empty).
+
+**Note:** SMTP settings are no longer used in single-user mode. Authentication has been removed.
 
 # Backend REST API Documentation
 

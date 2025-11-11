@@ -32,7 +32,6 @@ import org.reactivestreams.Publisher
  */
 @Slf4j
 @CompileStatic
-@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/live")
 class LiveEventsController {
 

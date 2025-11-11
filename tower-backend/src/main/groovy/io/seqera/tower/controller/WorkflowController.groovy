@@ -59,7 +59,6 @@ import org.grails.datastore.mapping.validation.ValidationException
  */
 @Slf4j
 @CompileStatic
-@Secured(['ROLE_USER'])
 @Controller("/workflow")
 class WorkflowController extends BaseController {
 

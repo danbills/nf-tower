@@ -36,8 +36,29 @@ export class AuthService {
   constructor(private http: HttpClient,
               private router: Router,
               private notificationService: NotificationService) {
-    this.userSubject = new BehaviorSubject(this.getPersistedUser());
+    // Single-user mode: auto-login with default user
+    const defaultUser = this.getOrCreateDefaultUser();
+    this.userSubject = new BehaviorSubject(defaultUser);
     this.user$ = this.userSubject.asObservable();
+  }
+
+  private getOrCreateDefaultUser(): User {
+    // Check if we have a persisted user
+    let user = this.getPersistedUser();
+    if (!user) {
+      // Create a default user for single-user mode
+      const defaultUserData = {
+        id: 1,
+        userName: 'tower-user',
+        email: 'user@tower.local',
+        firstName: 'Tower',
+        lastName: 'User',
+        trusted: true
+      };
+      user = new User(defaultUserData);
+      this.persistUser(user);
+    }
+    return user;
   }
 
   get isUserAuthenticated(): boolean {
@@ -53,21 +74,10 @@ export class AuthService {
   }
 
   setAuthorizedUser(): void {
-    this
-      .http
-      .get<DescribeUserResponse>(`${userEndpointUrl}/`, {withCredentials: true})
-      .pipe( map((response) => new User(response.user)) )
-      .subscribe(
-          (user) => {
-            this.router.navigate(['']);
-            this.setAuthUser(user);
-          },
-          (resp: HttpErrorResponse) => {
-            console.warn('Failed to fetch user data');
-            this.notificationService.showErrorNotification(resp.error.message);
-            this.router.navigate(['']);
-          }
-        );
+    // In single-user mode, just use the default user
+    const defaultUser = this.getOrCreateDefaultUser();
+    this.setAuthUser(defaultUser);
+    this.router.navigate(['']);
   }
 
   private setAuthUser(user: User): void {
