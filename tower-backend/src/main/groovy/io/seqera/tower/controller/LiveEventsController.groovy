@@ -19,8 +19,6 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.sse.Event
-import io.micronaut.security.annotation.Secured
-import io.micronaut.security.rules.SecurityRule
 import io.reactivex.Flowable
 import io.seqera.tower.exchange.live.LiveUpdate
 import io.seqera.tower.service.live.LiveEventsService

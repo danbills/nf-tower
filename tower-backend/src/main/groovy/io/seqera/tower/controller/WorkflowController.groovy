@@ -26,7 +26,6 @@ import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
-import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.seqera.tower.domain.Task
 import io.seqera.tower.domain.Workflow

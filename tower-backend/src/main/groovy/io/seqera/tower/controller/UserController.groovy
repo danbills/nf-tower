@@ -24,9 +24,7 @@ import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.rules.SecurityRule
 import io.seqera.tower.domain.User
 import io.seqera.tower.exchange.user.DeleteUserResponse
 import io.seqera.tower.exchange.user.EnableUserResponse
