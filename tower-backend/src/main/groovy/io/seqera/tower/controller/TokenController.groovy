@@ -11,6 +11,7 @@
 
 package io.seqera.tower.controller
 
+import javax.annotation.Nullable
 import javax.inject.Inject
 
 import grails.gorm.transactions.Transactional
@@ -22,7 +23,6 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
-import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.seqera.tower.domain.AccessToken
 import io.seqera.tower.exceptions.TowerException
@@ -42,7 +42,6 @@ import io.seqera.tower.service.audit.AuditEventPublisher
 @Controller("/token")
 @Transactional
 @CompileStatic
-@Secured(['ROLE_USER'])
 class TokenController  extends BaseController {
 
     @Inject UserService userService
@@ -52,7 +51,7 @@ class TokenController  extends BaseController {
     @Inject AuditEventPublisher eventPublisher
 
     @Get("/list")
-    HttpResponse<ListAccessTokensResponse> list(Authentication authentication) {
+    HttpResponse<ListAccessTokensResponse> list(@Nullable Authentication authentication) {
         try {
             final user = userService.getByAuth(authentication)
             final result = accessTokenService.findByUser(user)
@@ -65,7 +64,7 @@ class TokenController  extends BaseController {
     }
 
     @Post("/create")
-    HttpResponse<CreateAccessTokenResponse> create(Authentication authentication, String name) {
+    HttpResponse<CreateAccessTokenResponse> create(@Nullable Authentication authentication, String name) {
         try {
             final user = userService.getByAuth(authentication)
             final token = accessTokenService.createToken(name, user)
@@ -83,7 +82,7 @@ class TokenController  extends BaseController {
     }
 
     @Delete("/delete/{tokenId}")
-    HttpResponse delete(Long tokenId, Authentication authentication) {
+    HttpResponse delete(Long tokenId, @Nullable Authentication authentication) {
         try {
             final count = accessTokenService.deleteById(tokenId)
             eventPublisher.accessTokenDeleted(tokenId)
@@ -100,7 +99,7 @@ class TokenController  extends BaseController {
     }
 
     @Delete("/delete-all")
-    HttpResponse deleteAll(Authentication authentication) {
+    HttpResponse deleteAll(@Nullable Authentication authentication) {
         try {
             final user = userService.getByAuth(authentication)
             final count = accessTokenService.deleteByUser(user)
@@ -117,7 +116,7 @@ class TokenController  extends BaseController {
     }
 
     @Get('/default')
-    HttpResponse<GetDefaultTokenResponse> getDefaultToken(Authentication authentication) {
+    HttpResponse<GetDefaultTokenResponse> getDefaultToken(@Nullable Authentication authentication) {
         final user = userService.getByAuth(authentication)
         if( !user )
             return HttpResponse.badRequest(new GetDefaultTokenResponse(message: "Cannot find user: ${authentication.name}"))

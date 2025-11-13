@@ -19,7 +19,6 @@ import io.micronaut.context.event.ShutdownEvent
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent
 import io.micronaut.runtime.event.annotation.EventListener
-import io.micronaut.security.event.LoginSuccessfulEvent
 import io.seqera.tower.service.audit.AuditEvent
 /**
  * Object listening for application events
@@ -46,11 +45,6 @@ class ApplicationListener {
     @EventListener
     void onConfigRefresh(RefreshEvent event) {
         dispatcher.onConfigRefresh(event)
-    }
-
-    @EventListener
-    void onUserLogin(LoginSuccessfulEvent event) {
-        dispatcher.onUserLogin(event)
     }
 
     @EventListener

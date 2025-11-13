@@ -3,7 +3,7 @@ config ?= compile
 clean:
 	./gradlew clean
 	rm -rf .db
-	docker rm nf-tower_db_1 || true
+	podman rm nf-tower_db_1 || true
 
 test:
 ifndef class
@@ -14,11 +14,12 @@ endif
 
 build:
 	./gradlew assemble
-	./gradlew tower-backend:jibDockerBuild
-	docker build -t tower-web:latest tower-web/
+	./gradlew tower-backend:jibBuildTar
+	podman load -i tower-backend/build/jib-image.tar
+	podman build -t tower-web:latest tower-web/
 
 run:
-	docker-compose up
+	podman-compose up
 
 deps:
 	./gradlew -q tower-backend:dependencies --configuration ${config}

@@ -17,13 +17,12 @@ import io.micronaut.context.annotation.Replaces
 import io.micronaut.context.event.ShutdownEvent
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent
-import io.micronaut.security.event.LoginSuccessfulEvent
 import io.seqera.tower.service.audit.AuditEvent
 import io.seqera.tower.events.ApplicationEventDispatcher
 import io.seqera.tower.events.ApplicationEventDispatcherImpl
 /**
  * Dummy dispatcher to disable application events during tests
- * 
+ *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
 @Singleton
@@ -38,9 +37,6 @@ class DummyApplicationDispatcher implements ApplicationEventDispatcher {
 
     @Override
     void onConfigRefresh(RefreshEvent event) { }
-
-    @Override
-    void onUserLogin(LoginSuccessfulEvent event) { }
 
     @Override
     void onAuditEvent(AuditEvent event) {
