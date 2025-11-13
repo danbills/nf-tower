@@ -277,14 +277,20 @@ class UserServiceImpl implements UserService {
 
     @Override
     User getByAuth(Principal principal) {
-        assert principal
-        final identity = principal.getName()
-        if( !identity )
-            throw new IllegalArgumentException("Missing principal name field")
+        // In single-user mode, always return the default user
+        if (!principal) {
+            return getByEmail(UserBootstrapService.DEFAULT_USER_EMAIL)
+        }
 
-        identity.contains('@')
-                ?  getByEmail(identity)
-                :  getByUid(identity)
+        final identity = principal.getName()
+        if( !identity ) {
+            // Return default user instead of throwing exception
+            return getByEmail(UserBootstrapService.DEFAULT_USER_EMAIL)
+        }
+
+        // For backwards compatibility, check if identity exists, otherwise return default
+        def user = identity.contains('@') ? getByEmail(identity) : getByUid(identity)
+        return user ?: getByEmail(UserBootstrapService.DEFAULT_USER_EMAIL)
     }
 
     @Override

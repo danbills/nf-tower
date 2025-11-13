@@ -24,9 +24,7 @@ import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Produces
-import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
-import io.micronaut.security.rules.SecurityRule
 import io.seqera.tower.domain.User
 import io.seqera.tower.exchange.user.DeleteUserResponse
 import io.seqera.tower.exchange.user.EnableUserResponse
@@ -38,7 +36,6 @@ import io.seqera.tower.service.audit.AuditEventPublisher
 
 @Slf4j
 @Controller("/user")
-@Secured(SecurityRule.IS_AUTHENTICATED)
 class UserController extends BaseController {
 
     UserService userService
@@ -54,10 +51,11 @@ class UserController extends BaseController {
 
     @Get('/')
     @Transactional
-    HttpResponse<DescribeUserResponse> profile(Authentication authentication) {
+    HttpResponse<DescribeUserResponse> profile(@Nullable Authentication authentication) {
         final User user = userService.getByAuth(authentication)
         if (!user) {
-            return HttpResponse.badRequest(new DescribeUserResponse(message: "Cannot find user with name ${authentication.getName()}"))
+            final authName = authentication?.getName() ?: 'unknown'
+            return HttpResponse.badRequest(new DescribeUserResponse(message: "Cannot find user with name ${authName}"))
         }
 
         log.debug "Getting profile for user id=${user.id} userName=${user.userName} email=${user.email}"
@@ -66,7 +64,7 @@ class UserController extends BaseController {
 
     @Post("/update")
     @Produces(MediaType.TEXT_PLAIN)
-    HttpResponse<String> update(@Body User data, Authentication authentication) {
+    HttpResponse<String> update(@Body User data, @Nullable Authentication authentication) {
         try {
             final user = userService.getByAuth(authentication)
             userService.update(user, data)
@@ -81,7 +79,7 @@ class UserController extends BaseController {
 
     @Delete("/delete")
     @Produces(MediaType.TEXT_PLAIN)
-    HttpResponse<String> delete(Authentication authentication) {
+    HttpResponse<String> delete(@Nullable Authentication authentication) {
         try {
             final user = userService.getByAuth(authentication)
             userService.delete(user)
@@ -95,7 +93,6 @@ class UserController extends BaseController {
     }
 
     @Delete("/delete/{userId}")
-    @Secured(['ADMIN'])
     @Transactional
     HttpResponse<DeleteUserResponse> delete(Long userId) {
         User user = User.get(userId)
@@ -124,7 +121,6 @@ class UserController extends BaseController {
     }
 
     @Get('/get/{userId}')
-    @Secured(['ADMIN'])
     @Transactional
     HttpResponse<DescribeUserResponse> get(Long userId) {
         final user = User.get(userId)
@@ -136,7 +132,6 @@ class UserController extends BaseController {
 
 
     @Get('/allow/login/{userId}')
-    @Secured(['ADMIN'])
     @Transactional
     HttpResponse<EnableUserResponse> allowLogin(Long userId) {
         final user = User.get(userId)

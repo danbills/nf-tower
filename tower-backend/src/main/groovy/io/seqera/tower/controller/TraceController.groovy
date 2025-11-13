@@ -11,6 +11,7 @@
 
 package io.seqera.tower.controller
 
+import javax.annotation.Nullable
 import javax.inject.Inject
 
 import grails.gorm.transactions.Transactional
@@ -22,7 +23,6 @@ import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
-import io.micronaut.security.annotation.Secured
 import io.micronaut.security.authentication.Authentication
 import io.seqera.tower.domain.Task
 import io.seqera.tower.enums.TraceProcessingStatus
@@ -54,7 +54,6 @@ import io.seqera.tower.service.live.LiveEventsService
  */
 @Slf4j
 @CompileStatic
-@Secured(['ROLE_USER'])
 @Controller("/trace")
 class TraceController extends BaseController {
 
@@ -78,7 +77,7 @@ class TraceController extends BaseController {
     @Post("/workflow")
     @Transactional
     @Deprecated
-    HttpResponse<TraceWorkflowResponse> workflow(@Body TraceWorkflowRequest req, Authentication authentication) {
+    HttpResponse<TraceWorkflowResponse> workflow(@Body TraceWorkflowRequest req, @Nullable Authentication authentication) {
         try {
             final msg = (req.workflow.checkIsRunning()
                     ? "Receiving trace for new workflow [workflowId=${req.workflow.id}; user=${authentication.name}]"
@@ -105,7 +104,7 @@ class TraceController extends BaseController {
     @Post("/task")
     @Transactional
     @Deprecated
-    HttpResponse<TraceTaskResponse> task(@Body TraceTaskRequest req, Authentication authentication) {
+    HttpResponse<TraceTaskResponse> task(@Body TraceTaskRequest req, @Nullable Authentication authentication) {
         log.info "Receiving task trace request [workflowId=${req.workflowId}; tasks=${req.tasks?.size()}; user=${authentication.name}]"
 
         HttpResponse<TraceTaskResponse> response
@@ -133,7 +132,7 @@ class TraceController extends BaseController {
 
     @Post("/init")
     @Deprecated
-    HttpResponse<TraceInitResponse> init(TraceInitRequest req, Authentication authentication) {
+    HttpResponse<TraceInitResponse> init(TraceInitRequest req, @Nullable Authentication authentication) {
         log.info "Receiving trace init [user=${authentication.getName()}]"
         final workflowId = workflowService.createWorkflowKey()
         final resp = new TraceInitResponse(workflowId: workflowId)
@@ -145,7 +144,7 @@ class TraceController extends BaseController {
     // --== new api ==--
 
     @Post("/create")
-    HttpResponse<TraceCreateResponse> flowCreate(TraceCreateRequest req, Authentication authentication) {
+    HttpResponse<TraceCreateResponse> flowCreate(TraceCreateRequest req, @Nullable Authentication authentication) {
         log.info "> Trace create request [user=${authentication.getName()}]"
         // note: when the execution is launched from Tower the workflowId is already given
         // and the a workflow entity should exists
@@ -160,7 +159,7 @@ class TraceController extends BaseController {
 
     @Put("/{workflowId}/begin")
     @Transactional
-    HttpResponse<TraceBeginResponse> flowBegin(final String workflowId, @Body TraceBeginRequest req, Authentication authentication) {
+    HttpResponse<TraceBeginResponse> flowBegin(final String workflowId, @Body TraceBeginRequest req, @Nullable Authentication authentication) {
         try {
             log.info( "> Receiving trace for workflow begin [workflowId=${workflowId}; user=${authentication.name}]")
 
@@ -182,7 +181,7 @@ class TraceController extends BaseController {
 
     @Put("/{workflowId}/complete")
     @Transactional
-    HttpResponse<TraceCompleteResponse> flowComplete(final String workflowId, @Body TraceCompleteRequest req, Authentication authentication) {
+    HttpResponse<TraceCompleteResponse> flowComplete(final String workflowId, @Body TraceCompleteRequest req, @Nullable Authentication authentication) {
         try {
             log.info("> Receiving trace for workflow completion [workflowId=${workflowId}; user=${authentication.name}]")
 
@@ -204,7 +203,7 @@ class TraceController extends BaseController {
 
     @Put("/{workflowId}/progress")
     @Transactional
-    HttpResponse<TraceProgressResponse> record(String workflowId, @Body TraceProgressRequest req, Authentication authentication) {
+    HttpResponse<TraceProgressResponse> record(String workflowId, @Body TraceProgressRequest req, @Nullable Authentication authentication) {
         log.info "> Receiving trace tasks progress [workflowId=${workflowId}; tasks=${req.tasks?.size()}; user=${authentication.name}]"
 
         HttpResponse<TraceProgressResponse> response

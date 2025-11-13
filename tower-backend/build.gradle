@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
-    id "com.google.cloud.tools.jib" version "1.8.0"
+    id "com.google.cloud.tools.jib" version "3.4.0"
     id "groovy"
     id "application"
 }
@@ -34,13 +34,6 @@ dependencyManagement {
 configurations {
     // for dependencies that are needed for development only
     developmentOnly
-    all {
-        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            if (details.requested.group == 'org.codehaus.groovy' && details.requested.version == '2.5.2') {
-                details.useVersion '2.5.8'
-            }
-        }
-    }
 }
 
 
@@ -49,7 +42,7 @@ dependencies {
     implementation "io.micronaut:micronaut-validation"
     implementation "io.micronaut:micronaut-http-client"
     implementation "io.micronaut:micronaut-http-server-netty"
-    
+
     implementation "io.micronaut.configuration:micronaut-hibernate-gorm"
     implementation 'mysql:mysql-connector-java:8.0.16'
     implementation "com.h2database:h2:1.4.199"
@@ -58,9 +51,6 @@ dependencies {
     implementation "javax.mail:mail:1.4.7"
     implementation "org.jsoup:jsoup:1.11.2"
     implementation "org.apache.commons:commons-text:1.6"
-    implementation "org.codehaus.groovy:groovy-json:2.5.8"
-    implementation "org.codehaus.groovy:groovy-dateutil:2.5.8"
-    implementation "org.codehaus.groovy:groovy-datetime:2.5.8"
     implementation "org.codehaus.groovy:groovy-templates:2.5.8"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8"
     implementation "io.github.resilience4j:resilience4j-ratelimiter:0.17.0"
@@ -133,8 +123,9 @@ run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxrem
 // Build container image with JIB
 // https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin
 //
-jib.from.image = 'seqeralabs/nf-jdk:corretto-8u252'
+jib.from.image = 'amazoncorretto:11-alpine'
 jib.to.image = 'tower-backend:latest'
+jib.dockerClient.executable = 'podman'
 jib.container.creationTime = "${OffsetDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)}"
 jib.container.filesModificationTime = "${OffsetDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)}"
 jib.container.ports = ['8080']

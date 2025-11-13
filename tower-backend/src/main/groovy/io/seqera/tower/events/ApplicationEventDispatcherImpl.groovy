@@ -19,15 +19,14 @@ import groovy.util.logging.Slf4j
 import io.micronaut.context.event.ShutdownEvent
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent
-import io.micronaut.security.authentication.UserDetails
-import io.micronaut.security.event.LoginSuccessfulEvent
+import io.seqera.tower.service.UserBootstrapService
 import io.seqera.tower.service.audit.AuditEvent
 import io.seqera.tower.service.audit.AuditEventPublisher
 import io.seqera.tower.service.audit.AuditService
 import io.seqera.tower.service.cron.CronService
 /**
  * Implements application events dispatching logic
- * 
+ *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
 @Slf4j
@@ -37,6 +36,7 @@ class ApplicationEventDispatcherImpl implements ApplicationEventDispatcher {
     @Inject AuditEventPublisher eventPublisher
     @Inject @Nullable CronService cronService
     @Inject @Nullable AuditService auditService
+    @Inject UserBootstrapService userBootstrapService
 
     void onStartup(StartupEvent event) {
         log.info "Application started up"
@@ -54,15 +54,6 @@ class ApplicationEventDispatcherImpl implements ApplicationEventDispatcher {
 
     void onConfigRefresh(RefreshEvent event) {
         log.info "Got refresh event: " + event.getSource()
-    }
-
-    void onUserLogin(LoginSuccessfulEvent event) {
-        try {
-            eventPublisher.userSignIn((UserDetails)event.source)
-        }
-        catch (Exception e) {
-            log.error "Unable to process user sign-in audit event | ${e.message ?: e}"
-        }
     }
 
     void onAuditEvent(AuditEvent event) {
