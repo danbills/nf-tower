@@ -26,7 +26,7 @@ import io.seqera.tower.domain.User
 @Singleton
 class UserBootstrapService {
 
-    public static final String DEFAULT_USER_EMAIL = 'user@tower.local'
+    public static final String DEFAULT_USER_EMAIL = 'admin@example.com'
 
     @Inject
     UserService userService

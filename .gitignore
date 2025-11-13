@@ -25,3 +25,4 @@ elb-logs/*
 cloud-deployment
 .vscode/*
 .env
+.aider*

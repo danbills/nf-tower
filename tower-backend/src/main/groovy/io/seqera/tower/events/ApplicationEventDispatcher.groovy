@@ -14,7 +14,6 @@ package io.seqera.tower.events
 import io.micronaut.context.event.ShutdownEvent
 import io.micronaut.context.event.StartupEvent
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent
-import io.micronaut.security.event.LoginSuccessfulEvent
 import io.seqera.tower.service.audit.AuditEvent
 /**
  * Decouple application events from the actual listener objects
@@ -26,7 +25,6 @@ interface ApplicationEventDispatcher {
     void onStartup(StartupEvent event)
     void onShutdown(ShutdownEvent event)
     void onConfigRefresh(RefreshEvent event)
-    void onUserLogin(LoginSuccessfulEvent event)
     void onAuditEvent(AuditEvent event)
 
 }

@@ -51,10 +51,11 @@ class UserController extends BaseController {
 
     @Get('/')
     @Transactional
-    HttpResponse<DescribeUserResponse> profile(Authentication authentication) {
+    HttpResponse<DescribeUserResponse> profile(@Nullable Authentication authentication) {
         final User user = userService.getByAuth(authentication)
         if (!user) {
-            return HttpResponse.badRequest(new DescribeUserResponse(message: "Cannot find user with name ${authentication.getName()}"))
+            final authName = authentication?.getName() ?: 'unknown'
+            return HttpResponse.badRequest(new DescribeUserResponse(message: "Cannot find user with name ${authName}"))
         }
 
         log.debug "Getting profile for user id=${user.id} userName=${user.userName} email=${user.email}"
@@ -63,7 +64,7 @@ class UserController extends BaseController {
 
     @Post("/update")
     @Produces(MediaType.TEXT_PLAIN)
-    HttpResponse<String> update(@Body User data, Authentication authentication) {
+    HttpResponse<String> update(@Body User data, @Nullable Authentication authentication) {
         try {
             final user = userService.getByAuth(authentication)
             userService.update(user, data)
@@ -78,7 +79,7 @@ class UserController extends BaseController {
 
     @Delete("/delete")
     @Produces(MediaType.TEXT_PLAIN)
-    HttpResponse<String> delete(Authentication authentication) {
+    HttpResponse<String> delete(@Nullable Authentication authentication) {
         try {
             final user = userService.getByAuth(authentication)
             userService.delete(user)

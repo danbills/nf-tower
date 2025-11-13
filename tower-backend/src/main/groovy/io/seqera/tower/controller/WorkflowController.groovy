@@ -11,6 +11,7 @@
 
 package io.seqera.tower.controller
 
+import javax.annotation.Nullable
 import javax.inject.Inject
 
 import grails.gorm.transactions.Transactional
@@ -88,7 +89,7 @@ class WorkflowController extends BaseController {
 
     @Get("/list")
     @Transactional
-    HttpResponse<ListWorkflowResponse> list(Authentication authentication, HttpParameters filterParams) {
+    HttpResponse<ListWorkflowResponse> list(@Nullable Authentication authentication, HttpParameters filterParams) {
         Long max = filterParams.getFirst('max', Long.class, 50l)
         Long offset = filterParams.getFirst('offset', Long.class, 0l)
         if( max>WORKFLOW_LIST_MAX_ALLOWED )
@@ -113,7 +114,7 @@ class WorkflowController extends BaseController {
      */
     @Get("/{workflowId}")
     @Transactional(readOnly = true)
-    HttpResponse<GetWorkflowResponse> get(String workflowId, Authentication authentication) {
+    HttpResponse<GetWorkflowResponse> get(String workflowId, @Nullable Authentication authentication) {
         final workflow = workflowService.get(workflowId)
         if (!workflow)
             return HttpResponse.notFound(GetWorkflowResponse.error("Unknown workflow ID: $workflowId"))
@@ -181,7 +182,7 @@ class WorkflowController extends BaseController {
 
     @Transactional
     @Get("/{workflowId}/task/{taskId}")
-    HttpResponse<TaskGet> getTaskById(String workflowId, Long taskId, Authentication authentication) {
+    HttpResponse<TaskGet> getTaskById(String workflowId, Long taskId, @Nullable Authentication authentication) {
         final user = userService.getByAuth(authentication)
         final task = taskService.findByWorkflowAndTaskId(workflowId, taskId)
         if( !task )
@@ -194,7 +195,7 @@ class WorkflowController extends BaseController {
 
     @Transactional
     @Delete('/{workflowId}')
-    HttpResponse delete(String workflowId, Authentication authentication) {
+    HttpResponse delete(String workflowId, @Nullable Authentication authentication) {
         final user = userService.getByAuth(authentication)
         eventPublisher.workflowDeletion(workflowId)
         if( workflowService.markForDeletion(workflowId) )
@@ -242,7 +243,7 @@ class WorkflowController extends BaseController {
     @Transactional
     @Post('/{workflowId}/comment/add')
     @CompileDynamic
-    HttpResponse<AddWorkflowCommentResponse> addComment(Authentication authentication, String workflowId, AddWorkflowCommentRequest request) {
+    HttpResponse<AddWorkflowCommentResponse> addComment(@Nullable Authentication authentication, String workflowId, AddWorkflowCommentRequest request) {
         try {
             final user = userService.getByAuth(authentication)
             final workflow = workflowService.get(workflowId)
@@ -275,7 +276,7 @@ class WorkflowController extends BaseController {
     @Transactional
     @Put('/{workflowId}/comment')
     @CompileDynamic
-    HttpResponse<UpdateWorkflowCommentResponse> updateComment(Authentication authentication, String workflowId, UpdateWorkflowCommentRequest request) {
+    HttpResponse<UpdateWorkflowCommentResponse> updateComment(@Nullable Authentication authentication, String workflowId, UpdateWorkflowCommentRequest request) {
         try {
             final user = userService.getByAuth(authentication)
 
@@ -320,7 +321,7 @@ class WorkflowController extends BaseController {
     @Transactional
     @Delete('/{workflowId}/comment')
     @CompileDynamic
-    HttpResponse<DeleteWorkflowCommentResponse> deleteComment(Authentication authentication, String workflowId, DeleteWorkflowCommentRequest request) {
+    HttpResponse<DeleteWorkflowCommentResponse> deleteComment(@Nullable Authentication authentication, String workflowId, DeleteWorkflowCommentRequest request) {
         try {
             final user = userService.getByAuth(authentication)
 

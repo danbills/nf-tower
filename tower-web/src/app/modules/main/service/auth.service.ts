@@ -53,7 +53,11 @@ export class AuthService {
         email: 'user@tower.local',
         firstName: 'Tower',
         lastName: 'User',
-        trusted: true
+        trusted: true,
+        organization: '',
+        description: '',
+        notification: false,
+        avatar: ''
       };
       user = new User(defaultUserData);
       this.persistUser(user);

@@ -148,7 +148,7 @@ class WorkflowServiceImpl implements WorkflowService {
 
         else {
             if( !request.workflow.id )
-                throw new IllegalStateException("Missing launch workflow id=$request.launchId")
+                throw new IllegalStateException("Missing launch workflow id=$request.workflow.id")
             final Workflow workflow = get(request.workflow.id)
             if( !workflow )
                 throw new IllegalStateException("Unable to find launch workflow id=$request.workflow.id")
