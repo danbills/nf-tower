@@ -37,6 +37,6 @@ import io.swagger.v3.oas.annotations.info.License
 class Application {
     static void main(String[] args) {
         log.info "++ Tower backend starting ++ ${RuntimeInfo.info('; ')}"
-        Micronaut.run(Application)
+        Micronaut.run(Application, args)
     }
 }
