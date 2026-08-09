@@ -68,5 +68,9 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.8.3"
-  }
+  },
+  "trustedDependencies": [
+    "@angular/cli",
+    "core-js"
+  ]
 }
