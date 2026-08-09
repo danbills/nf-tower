@@ -25,22 +25,26 @@ visit [Seqera Labs](https://seqera.io).
 
 ## Requirements 
 
-* Java 8
-* Docker engine
+* Java 21 (or Java 11/17)
+* Gradle 8.7+ (wrapper included)
+* Bun or Node.js (v22+)
+* Docker / Podman (optional, for containerized run)
 
-## Build the environment
-
-```bash
-make build
-```
-
-## Run locally
+## Quick Start (One-Command Dev Launcher)
 
 ```bash
-make run
+./start.sh
+```
+Or:
+```bash
+make dev
 ```
 
-See `docker-compose.yml` file for details.
+## Docker / Container Run
+
+```bash
+docker compose up
+```
 
 
 ## Backend settings

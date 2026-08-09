@@ -1,27 +1,32 @@
-version: "3"
-services:
+version: "3.8"
 
+services:
   backend:
-    build: ./tower-backend
-    image: tower-backend
-    networks:
-      - frontend
-      - backend
+    build:
+      context: ./tower-backend
+    image: tower-backend:latest
+    container_name: tower-backend
     ports:
-      - 8080:8080
+      - "8080:8080"
+    environment:
+      - MICRONAUT_HOST=0.0.0.0
+      - MICRONAUT_PORT=8080
+      - TOWER_SERVER_URL=http://localhost:8000
     volumes:
-      - $PWD:/work
-    working_dir: /work
+      - ./data/db:/.db
+    restart: unless-stopped
 
   frontend:
-    build: ./tower-web
-    networks:
-      - frontend
+    build:
+      context: ./tower-web
+    image: tower-web:latest
+    container_name: tower-web
     ports:
-      - 8000:80
+      - "8000:80"
     depends_on:
       - backend
+    restart: unless-stopped
 
 networks:
-  frontend: {}
-  backend: {}
+  default:
+    name: tower-network

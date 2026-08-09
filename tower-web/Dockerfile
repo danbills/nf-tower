@@ -1,19 +1,18 @@
-# Step 1: Build the app in image 'builder'
-FROM node:12.0.0-alpine AS builder
-
-RUN npm config set unsafe-perm true
-RUN npm install -g @angular/cli
+# Step 1: Build Angular frontend
+FROM node:22-alpine AS builder
 
 WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
 COPY . .
-RUN npm install
-RUN npm run build
+RUN NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/ng build --prod
 
-# Step 2: Use build output from 'builder'
-FROM nginx:stable-alpine
-LABEL version="1.0"
+# Step 2: Serve static app using Nginx
+FROM nginx:alpine
+LABEL version="20.06.0"
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf 2>/dev/null || true
+COPY --from=builder /usr/src/app/dist/tower-web/ /usr/share/nginx/html
 
-WORKDIR /usr/share/nginx/html
-COPY --from=builder /usr/src/app/dist/tower-web/ .
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

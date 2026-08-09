@@ -1,26 +1,24 @@
-config ?= compile
+.PHONY: all build run dev test clean deps
+
+all: build
 
 clean:
 	./gradlew clean
-	rm -rf .db
-	podman rm nf-tower_db_1 || true
+	rm -rf .db tower-backend/.db
 
 test:
-ifndef class
-	MICRONAUT_ENVIRONMENTS=mysql ./gradlew test
-else
-	MICRONAUT_ENVIRONMENTS=mysql ./gradlew test --tests ${class}
-endif
+	./gradlew test
 
 build:
 	./gradlew assemble
-	./gradlew tower-backend:jibBuildTar
-	podman load -i tower-backend/build/jib-image.tar
-	podman build -t tower-web:latest tower-web/
+	podman build -t tower-backend:latest tower-backend/ || docker build -t tower-backend:latest tower-backend/
+	podman build -t tower-web:latest tower-web/ || docker build -t tower-web:latest tower-web/
 
 run:
-	podman-compose up
+	podman-compose up || docker-compose up
+
+dev:
+	./start.sh
 
 deps:
-	./gradlew -q tower-backend:dependencies --configuration ${config}
-
+	./gradlew -q tower-backend:dependencies
